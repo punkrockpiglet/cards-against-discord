@@ -2,6 +2,7 @@ package dev.vrba.discord.cah.services
 
 import dev.vrba.discord.cah.entities.Lobby
 import dev.vrba.discord.cah.exceptions.EmbeddableException
+import dev.vrba.discord.cah.exceptions.LobbyNotFoundException
 import dev.vrba.discord.cah.repositories.LobbyRepository
 import dev.vrba.discord.cah.services.contract.LobbyServiceInterface
 import org.springframework.data.repository.findByIdOrNull
@@ -26,10 +27,7 @@ class LobbyService(private val repository: LobbyRepository) : LobbyServiceInterf
     }
 
     override fun joinOrLeaveLobby(id: Int, user: Long): Lobby {
-        val lobby = repository.findByIdOrNull(id) ?: throw EmbeddableException(
-            "Lobby was not found",
-            "It might have been cancelled or started. If not, this is probably a bug."
-        )
+        val lobby = repository.findByIdOrNull(id) ?: throw LobbyNotFoundException
 
         if (lobby.owner == user) {
             throw EmbeddableException(
@@ -48,10 +46,35 @@ class LobbyService(private val repository: LobbyRepository) : LobbyServiceInterf
     }
 
     override fun startLobby(id: Int, invoker: Long) {
+        val lobby = repository.findByIdOrNull(id) ?: throw LobbyNotFoundException
+
+        if (lobby.owner != invoker) {
+            throw EmbeddableException(
+                "You are not the owner of this lobby",
+                "Only the owner is eligible to start the game, sorry."
+            )
+        }
+
+        if (lobby.players.size < 2) {
+            throw EmbeddableException(
+                "There need to be at least 2 players to start the game",
+                "Other members can join using the Join/Leave button below the lobby embed."
+            )
+        }
+
         TODO("Not yet implemented")
     }
 
     override fun cancelLobby(id: Int, invoker: Long) {
-        TODO("Not yet implemented")
+        val lobby = repository.findByIdOrNull(id) ?: throw LobbyNotFoundException
+
+        if (lobby.owner != invoker) {
+            throw EmbeddableException(
+                "You are not the owner of this lobby",
+                "Only the owner is eligible to cancel the game, sorry."
+            )
+        }
+
+        repository.delete(lobby)
     }
 }
