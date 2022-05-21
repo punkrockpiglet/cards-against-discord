@@ -1,5 +1,5 @@
-drop table if exists games;
-drop table if exists players;
+drop table if exists games cascade;
+drop table if exists players cascade;
 
 create table games
 (
