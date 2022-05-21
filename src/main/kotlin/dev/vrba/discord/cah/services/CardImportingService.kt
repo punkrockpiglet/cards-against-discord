@@ -16,7 +16,6 @@ class CardImportingService(
     private val mapper: ObjectMapper,
 ) : CommandLineRunner {
 
-
     data class BlackCardSource(
         val text: String,
         val pick: Int
