@@ -9,6 +9,7 @@ data class Lobby(
     @Id
     val id: Int,
 
+    @Column("owner_id")
     val owner: Long,
 
     val players: Set<Long>,
