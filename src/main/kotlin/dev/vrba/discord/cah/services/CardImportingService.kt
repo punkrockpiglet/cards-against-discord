@@ -28,8 +28,9 @@ class CardImportingService(
     )
 
     override fun run(vararg args: String?) {
-        val source = this::class.java.getResourceAsStream("/cards.json") ?: throw IllegalStateException("Cannot find the /cards.json source file!")
-        val cards = mapper.readValue<CardsAgainstJsonSource>(source)
+        val cards = this::class.java.getResourceAsStream("/cards.json")
+            ?.let { mapper.readValue<CardsAgainstJsonSource>(it) }
+            ?: throw IllegalStateException("Cannot find the /cards.json source file!")
 
         whiteCardRepository.deleteAll()
         blackCardRepository.deleteAll()
