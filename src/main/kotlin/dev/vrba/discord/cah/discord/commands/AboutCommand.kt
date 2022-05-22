@@ -1,6 +1,7 @@
 package dev.vrba.discord.cah.discord.commands
 
 import dev.vrba.discord.cah.discord.DiscordColors
+import dev.vrba.discord.cah.discord.DiscordEmbeds
 import dev.vrba.discord.cah.exceptions.EmbeddableException
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
@@ -21,7 +22,7 @@ class AboutCommand : ApplicationSlashCommand {
         val embed = EmbedBuilder()
             .setColor(DiscordColors.primary)
             .setTitle("Cards Against Discord")
-            .setThumbnail("https://i.imgur.com/f4B2lMc.png")
+            .setThumbnail(DiscordEmbeds.thumbnail)
             .setDescription("**The ultimate Cards Against Humanity bot.**")
             .setFooter("This bot is playing on ${event.jda.guilds.size} servers already!")
             .build()

@@ -21,8 +21,6 @@ class LobbyService(private val repository: LobbyRepository) : LobbyServiceInterf
             message = message
         )
 
-        // TODO: Decide whether to update the lobby embed here or in the discord event listener
-
         return repository.save(lobby)
     }
 
