@@ -6,5 +6,5 @@ import org.springframework.boot.context.properties.ConstructorBinding
 @ConfigurationProperties(prefix = "discord")
 data class DiscordConfiguration @ConstructorBinding constructor(
     val token: String,
-    val developmentGuildId: Long? = null
+    val developmentGuildId: Long
 )
