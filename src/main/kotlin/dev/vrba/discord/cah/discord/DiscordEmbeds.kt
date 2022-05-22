@@ -10,7 +10,16 @@ object DiscordEmbeds {
         return EmbedBuilder()
             .setColor(DiscordColors.red)
             .setTitle(exception.title)
-            .setDescription(exception.description ?: "No further details provided")
+            .setDescription(exception.description ?: "No further details were provided")
+            .setFooter("If you think this is a bug, please file an issue on GitHub")
+            .build()
+    }
+    
+    fun errorEmbed(error: String? = null): MessageEmbed {
+        return EmbedBuilder()
+            .setColor(DiscordColors.red)
+            .setTitle("Sorry, there was an error")
+            .setDescription(error ?: "No further details were provided")
             .setFooter("If you think this is a bug, please file an issue on GitHub")
             .build()
     }
