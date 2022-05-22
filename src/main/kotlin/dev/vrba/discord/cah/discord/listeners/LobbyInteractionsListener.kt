@@ -17,18 +17,16 @@ class LobbyInteractionsListener(private val service: LobbyService) : ListenerAda
             return
         }
 
-        val segments = event.componentId.removePrefix("lobby:").split(":")
-
         val user = event.user.idLong
         val message = event.message
 
-        val action = segments[0]
-        val id = segments[1].toInt()
+        val (action, id) = event.componentId.removePrefix("lobby:").split(":")
+        val parsed = id.toInt()
 
         when (action) {
-            "join" -> joinOrLeaveLobby(id, user, message)
-            "start" -> startLobby(id, user, message)
-            "cancel" -> cancelLobby(id, user, message)
+            "join" -> joinOrLeaveLobby(parsed, user, message)
+            "start" -> startLobby(parsed, user, message)
+            "cancel" -> cancelLobby(parsed, user, message)
             else -> throw IllegalArgumentException("Invalid lobby button action [${action}] encountered!")
         }
     }

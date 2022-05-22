@@ -9,7 +9,7 @@ object DiscordEmbeds {
 
     const val thumbnail = "https://i.imgur.com/0imOaFr.png"
 
-    const val thumbnailDisabled = "https://i.imgur.com/8h3IkgG.png"
+    private const val thumbnailDisabled = "https://i.imgur.com/8h3IkgG.png"
 
     fun exceptionEmbed(exception: EmbeddableException): MessageEmbed {
         return EmbedBuilder()
