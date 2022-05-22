@@ -7,7 +7,9 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 
 object DiscordEmbeds {
 
-    const val thumbnail = "https://i.imgur.com/f4B2lMc.png"
+    const val thumbnail = "https://i.imgur.com/0imOaFr.png"
+
+    const val thumbnailDisabled = "https://i.imgur.com/8h3IkgG.png"
 
     fun exceptionEmbed(exception: EmbeddableException): MessageEmbed {
         return EmbedBuilder()
@@ -31,6 +33,14 @@ object DiscordEmbeds {
             .setColor(DiscordColors.primary)
             .setTitle("Creating a new game lobby...")
             .setDescription("This shouldn't take long")
+            .build()
+    }
+
+    fun lobbyCancelledEmbed(): MessageEmbed {
+        return EmbedBuilder()
+            .setTitle("This game was cancelled")
+            .setDescription("To create a new lobby, use the **/game** command")
+            .setThumbnail(thumbnailDisabled)
             .build()
     }
 
