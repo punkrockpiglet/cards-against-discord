@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table
 @Table("players")
 data class Player(
     @Id
-    val id: Int,
+    val id: Int = 0,
 
     @Column("user_id")
     val user: Long,

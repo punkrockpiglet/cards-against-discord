@@ -27,20 +27,20 @@ interface WhiteCardRepository : CrudRepository<WhiteCard, Int> {
             select white_cards.* from white_cards
                 left join player_cards on white_cards.id = player_cards.white_card_id
                 left join players on player_cards.player_id = players.id
-            where player_id = :player_id
+            where players.user_id = :user_id
             order by white_cards.id
         """
     )
-    fun getAvailableWhiteCards(@Param("player_id") player: Int): List<WhiteCard>
+    fun getAvailableWhiteCards(@Param("user_id") user: Long): List<WhiteCard>
 
     @Query(
         """
             select white_cards.* from white_cards
                 left join picked_cards on white_cards.id = picked_cards.white_card_id
                 left join players on picked_cards.player_id = players.id
-            where player_id = :player_id
-            order by blank_index
+            where players.user_id = :user_id
+            order by picked_cards.blank_index
         """
     )
-    fun getPickedWhiteCards(@Param("player_id") player: Int): List<WhiteCard>
+    fun getPickedWhiteCards(@Param("user_id") user: Long): List<WhiteCard>
 }
