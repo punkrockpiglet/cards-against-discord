@@ -4,7 +4,7 @@ import dev.vrba.discord.cah.entities.Lobby
 
 interface LobbyServiceInterface {
 
-    fun createLobby(owner: Long, guild: Long, channel: Long, message: Long): Lobby
+    fun createLobby(points: Int, owner: Long, guild: Long, channel: Long, message: Long): Lobby
 
     fun joinOrLeaveLobby(id: Int, user: Long): Lobby
 

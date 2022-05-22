@@ -18,6 +18,9 @@ data class Game(
     @Column("message_id")
     val message: Long? = null,
 
+    @Column("win_points")
+    val points: Int = 10,
+
     @Column("black_card_id")
     val blackCard: Int? = null,
 

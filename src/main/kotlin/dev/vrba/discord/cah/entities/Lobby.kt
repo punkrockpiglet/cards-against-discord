@@ -14,6 +14,9 @@ data class Lobby(
 
     val players: Set<Long>,
 
+    @Column("win_points")
+    val points: Int = 10,
+
     @Column("guild_id")
     val guild: Long,
 

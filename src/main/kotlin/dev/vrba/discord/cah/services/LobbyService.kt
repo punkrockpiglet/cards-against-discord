@@ -11,11 +11,12 @@ import org.springframework.stereotype.Service
 @Service
 class LobbyService(private val repository: LobbyRepository) : LobbyServiceInterface {
 
-    override fun createLobby(owner: Long, guild: Long, channel: Long, message: Long): Lobby {
+    override fun createLobby(points: Int, owner: Long, guild: Long, channel: Long, message: Long): Lobby {
         val lobby = Lobby(
             id = 0,
             owner = owner,
             players = setOf(owner),
+            points = points,
             guild = guild,
             channel = channel,
             message = message

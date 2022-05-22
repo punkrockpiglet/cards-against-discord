@@ -46,6 +46,7 @@ object DiscordEmbeds {
             )
             .addField("Game owner", lobby.owner.asUserMention(), false)
             .addField("Joined players", lobby.players.joinToString(", ") { it.asUserMention() }, false)
+            .setFooter("First player to reach ${lobby.points} points wins the game")
             .setThumbnail(thumbnail)
             .build()
     }

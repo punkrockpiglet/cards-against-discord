@@ -18,7 +18,7 @@ class GameService(
 ) : GameServiceInterface {
 
     override fun createGame(lobby: Lobby): Game {
-        val entity = Game(guild = lobby.guild, channel = lobby.channel)
+        val entity = Game(guild = lobby.guild, channel = lobby.channel, points = lobby.points)
 
         val game = gameRepository.save(entity)
         val players = lobby.players.map { Player(user = it, game = game.id) }
