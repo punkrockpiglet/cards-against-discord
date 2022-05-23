@@ -59,4 +59,11 @@ object DiscordEmbeds {
             .build()
     }
 
+    fun gamePlaceholderEmbed(): MessageEmbed {
+        return EmbedBuilder()
+            .setColor(DiscordColors.primary)
+            .setTitle("Starting a new game...")
+            .setDescription("This shouldn't take long")
+            .build()
+    }
 }

@@ -9,7 +9,10 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
-class LobbyService(private val repository: LobbyRepository) : LobbyServiceInterface {
+class LobbyService(
+    private val repository: LobbyRepository,
+    private val gameService: GameService
+) : LobbyServiceInterface {
 
     override fun createLobby(points: Int, owner: Long, guild: Long, channel: Long, message: Long): Lobby {
         val lobby = Lobby(
@@ -61,7 +64,8 @@ class LobbyService(private val repository: LobbyRepository) : LobbyServiceInterf
             )
         }
 
-        TODO("Not yet implemented")
+        repository.delete(lobby)
+        gameService.createGame(lobby)
     }
 
     override fun cancelLobby(id: Int, invoker: Long) {

@@ -1,5 +1,6 @@
 package dev.vrba.discord.cah.services
 
+import dev.vrba.discord.cah.discord.DiscordEmbeds.gamePlaceholderEmbed
 import dev.vrba.discord.cah.entities.Game
 import dev.vrba.discord.cah.entities.Lobby
 import dev.vrba.discord.cah.entities.Player
@@ -22,7 +23,15 @@ class GameService(
 ) : GameServiceInterface {
 
     override fun createGame(lobby: Lobby): Game {
-        val entity = Game(guild = lobby.guild, channel = lobby.channel, points = lobby.points)
+        val channel = findChannel(lobby.guild, lobby.channel) ?: throw IllegalStateException("Cannot find the invoking text channel!")
+        val message = channel.sendMessageEmbeds(gamePlaceholderEmbed()).complete()
+
+        val entity = Game(
+            guild = lobby.guild,
+            channel = lobby.channel,
+            message = message.idLong,
+            points = lobby.points
+        )
 
         val game = gameRepository.save(entity)
         val players = lobby.players.map { Player(user = it, game = game.id) }

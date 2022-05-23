@@ -38,9 +38,9 @@ class LobbyInteractionsListener(private val service: LobbyService) : Application
     }
 
     private fun startLobby(id: Int, user: Long, event: ButtonInteractionEvent) {
-        event.deferReply(true).complete()
         service.startLobby(id, user)
 
+        event.deferEdit().complete()
         event.message.delete().queue()
     }
 
