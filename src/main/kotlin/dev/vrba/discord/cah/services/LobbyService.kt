@@ -50,14 +50,14 @@ class LobbyService(private val repository: LobbyRepository) : LobbyServiceInterf
         if (lobby.owner != invoker) {
             throw EmbeddableException(
                 "You are not the owner of this lobby",
-                "Only the owner is eligible to start the game, sorry."
+                "Only the owner is eligible to start the game."
             )
         }
 
         if (lobby.players.size < 2) {
             throw EmbeddableException(
                 "There need to be at least 2 players to start the game",
-                "Other members can join using the Join/Leave button below the lobby embed."
+                "Other members can join using the **Join / Leave** button below the lobby embed."
             )
         }
 
@@ -70,7 +70,7 @@ class LobbyService(private val repository: LobbyRepository) : LobbyServiceInterf
         if (lobby.owner != invoker) {
             throw EmbeddableException(
                 "You are not the owner of this lobby",
-                "Only the owner is eligible to cancel the game, sorry."
+                "Only the owner is eligible to cancel the game."
             )
         }
 

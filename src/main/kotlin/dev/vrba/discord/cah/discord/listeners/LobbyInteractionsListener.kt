@@ -1,7 +1,9 @@
 package dev.vrba.discord.cah.discord.listeners
 
+import dev.vrba.discord.cah.discord.DiscordEmbeds.errorEmbed
 import dev.vrba.discord.cah.discord.DiscordEmbeds.lobbyCancelledEmbed
 import dev.vrba.discord.cah.discord.DiscordEmbeds.lobbyEmbed
+import dev.vrba.discord.cah.exceptions.EmbeddableException
 import dev.vrba.discord.cah.services.LobbyService
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
@@ -23,11 +25,24 @@ class LobbyInteractionsListener(private val service: LobbyService) : ListenerAda
         val (action, id) = event.componentId.removePrefix("lobby:").split(":")
         val parsed = id.toInt()
 
-        when (action) {
-            "join" -> joinOrLeaveLobby(parsed, user, message)
-            "start" -> startLobby(parsed, user, message)
-            "cancel" -> cancelLobby(parsed, user, message)
-            else -> throw IllegalArgumentException("Invalid lobby button action [${action}] encountered!")
+        // TODO: Make a shared error handling mechanism for all event listeners
+        try {
+            when (action) {
+                "join" -> joinOrLeaveLobby(parsed, user, message)
+                "start" -> startLobby(parsed, user, message)
+                "cancel" -> cancelLobby(parsed, user, message)
+                else -> throw IllegalArgumentException("Invalid lobby button action [${action}] encountered!")
+            }
+        }
+        catch (exception: EmbeddableException) {
+            return event.replyEmbeds(exception.toEmbed())
+                .setEphemeral(true)
+                .queue()
+        }
+        catch (exception: Throwable) {
+            return event.replyEmbeds(errorEmbed())
+                .setEphemeral(true)
+                .queue()
         }
     }
 

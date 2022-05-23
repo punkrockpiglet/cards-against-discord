@@ -16,7 +16,6 @@ object DiscordEmbeds {
             .setColor(DiscordColors.red)
             .setTitle(exception.title)
             .setDescription(exception.description ?: "No further details were provided")
-            .setFooter("If you think this is a bug, please file an issue on GitHub")
             .build()
     }
     
@@ -24,7 +23,6 @@ object DiscordEmbeds {
         return EmbedBuilder()
             .setColor(DiscordColors.red)
             .setTitle(error ?: "Sorry, there was an error")
-            .setFooter("If you think this is a bug, please file an issue on GitHub")
             .build()
     }
 
