@@ -8,10 +8,14 @@ import dev.vrba.discord.cah.repositories.GameRepository
 import dev.vrba.discord.cah.repositories.PlayerRepository
 import dev.vrba.discord.cah.repositories.WhiteCardRepository
 import dev.vrba.discord.cah.services.contract.GameServiceInterface
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.entities.TextChannel
 import org.springframework.stereotype.Service
 
 @Service
 class GameService(
+    private val jda: JDA,
     private val gameRepository: GameRepository,
     private val playerRepository: PlayerRepository,
     private val whiteCardRepository: WhiteCardRepository
@@ -34,5 +38,15 @@ class GameService(
 
     override fun getPickedWhiteCards(game: Int, user: Long): List<WhiteCard> {
         return whiteCardRepository.getPickedWhiteCards(user)
+    }
+
+    private fun findMessage(guild: Long, channel: Long, message: Long): Message? {
+       return findChannel(guild, channel)
+           ?.retrieveMessageById(message)
+           ?.complete()
+    }
+
+    private fun findChannel(guild: Long, channel: Long): TextChannel? {
+        return jda.getGuildById(guild)?.getTextChannelById(channel)
     }
 }

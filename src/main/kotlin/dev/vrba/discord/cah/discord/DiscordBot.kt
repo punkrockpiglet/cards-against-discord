@@ -1,6 +1,7 @@
 package dev.vrba.discord.cah.discord
 
 import dev.vrba.discord.cah.discord.commands.ApplicationSlashCommand
+import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.entities.Activity
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class DiscordBot(
+    private val jda: JDA,
     private val environment: Environment,
     private val configuration: DiscordConfiguration,
     private val listeners: List<EventListener>,
@@ -19,12 +21,7 @@ class DiscordBot(
 ) : CommandLineRunner {
 
     override fun run(vararg args: String?) {
-        val jda = JDABuilder.createDefault(configuration.token)
-            .addEventListeners(*listeners.toTypedArray())
-            .setStatus(OnlineStatus.ONLINE)
-            .setActivity(Activity.playing("Cards Against Humanity"))
-            .build()
-
+        jda.addEventListener(*listeners.toTypedArray())
 
         // If running in the development mode, register all slash commands to the configured guild
         // When registering commands globally, there is up to one-hour delay before the commands become available
