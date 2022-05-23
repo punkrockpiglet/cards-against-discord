@@ -31,7 +31,7 @@ class LobbyService(private val repository: LobbyRepository) : LobbyServiceInterf
         if (lobby.owner == user) {
             throw EmbeddableException(
                 "You are the owner of this lobby",
-                "You cannot leave this lobby. If you wish to cancel this game, please click the Cancel button instead."
+                "If you wish not to play this game, please click the **Cancel** button instead."
             )
         }
 
