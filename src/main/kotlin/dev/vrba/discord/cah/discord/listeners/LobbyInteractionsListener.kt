@@ -1,17 +1,13 @@
 package dev.vrba.discord.cah.discord.listeners
 
-import dev.vrba.discord.cah.discord.DiscordEmbeds.errorEmbed
 import dev.vrba.discord.cah.discord.DiscordEmbeds.lobbyCancelledEmbed
 import dev.vrba.discord.cah.discord.DiscordEmbeds.lobbyEmbed
-import dev.vrba.discord.cah.exceptions.EmbeddableException
 import dev.vrba.discord.cah.services.LobbyService
-import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
-import net.dv8tion.jda.api.hooks.ListenerAdapter
 import org.springframework.stereotype.Component
 
 @Component
-class LobbyInteractionsListener(private val service: LobbyService) : ListenerAdapter() {
+class LobbyInteractionsListener(private val service: LobbyService) : ApplicationEventListener() {
 
     override fun onButtonInteraction(event: ButtonInteractionEvent) {
         // Only handle events that come from lobby embed buttons
@@ -20,46 +16,39 @@ class LobbyInteractionsListener(private val service: LobbyService) : ListenerAda
         }
 
         val user = event.user.idLong
-        val message = event.message
 
         val (action, id) = event.componentId.removePrefix("lobby:").split(":")
         val parsed = id.toInt()
 
-        // TODO: Make a shared error handling mechanism for all event listeners
-        try {
+        handleInteractionErrors(event) {
             when (action) {
-                "join" -> joinOrLeaveLobby(parsed, user, message)
-                "start" -> startLobby(parsed, user, message)
-                "cancel" -> cancelLobby(parsed, user, message)
+                "join" -> joinOrLeaveLobby(parsed, user, event)
+                "start" -> startLobby(parsed, user, event)
+                "cancel" -> cancelLobby(parsed, user, event)
                 else -> throw IllegalArgumentException("Invalid lobby button action [${action}] encountered!")
             }
         }
-        catch (exception: EmbeddableException) {
-            return event.replyEmbeds(exception.toEmbed())
-                .setEphemeral(true)
-                .queue()
-        }
-        catch (exception: Throwable) {
-            return event.replyEmbeds(errorEmbed())
-                .setEphemeral(true)
-                .queue()
-        }
     }
 
-    private fun joinOrLeaveLobby(id: Int, user: Long, message: Message) {
+    private fun joinOrLeaveLobby(id: Int, user: Long, event: ButtonInteractionEvent) {
         val lobby = service.joinOrLeaveLobby(id, user)
         val embed = lobbyEmbed(lobby)
 
-        message.editMessageEmbeds(embed).queue()
+        event.editMessageEmbeds(embed).queue()
     }
 
-    private fun startLobby(id: Int, user: Long, message: Message) {
+    private fun startLobby(id: Int, user: Long, event: ButtonInteractionEvent) {
+        event.deferReply(true).complete()
         service.startLobby(id, user)
-        message.delete().queue()
+
+        event.message.delete().queue()
     }
 
-    private fun cancelLobby(id: Int, user: Long, message: Message) {
+    private fun cancelLobby(id: Int, user: Long, event: ButtonInteractionEvent) {
         service.cancelLobby(id, user)
-        message.editMessageEmbeds(lobbyCancelledEmbed()).queue()
+
+        event.editMessageEmbeds(lobbyCancelledEmbed())
+            .setActionRows(listOf())
+            .queue()
     }
 }
