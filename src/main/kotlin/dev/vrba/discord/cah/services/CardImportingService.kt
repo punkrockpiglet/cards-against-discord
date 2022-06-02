@@ -6,6 +6,7 @@ import dev.vrba.discord.cah.entities.BlackCard
 import dev.vrba.discord.cah.entities.WhiteCard
 import dev.vrba.discord.cah.repositories.BlackCardRepository
 import dev.vrba.discord.cah.repositories.WhiteCardRepository
+import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Service
 
@@ -15,6 +16,8 @@ class CardImportingService(
     private val blackCardRepository: BlackCardRepository,
     private val mapper: ObjectMapper,
 ) : CommandLineRunner {
+
+    private val logger = LoggerFactory.getLogger(this::class.qualifiedName)
 
     data class BlackCardSource(
         val text: String,
@@ -37,5 +40,7 @@ class CardImportingService(
 
         whiteCardRepository.saveAll(cards.white.map { WhiteCard(0, it) })
         blackCardRepository.saveAll(cards.black.map { BlackCard(0, it.pick, it.text) })
+
+        logger.info("Imported ${cards.white.size} white cards and ${cards.black.size} black cards")
     }
 }
