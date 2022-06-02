@@ -31,5 +31,11 @@ data class Game(
     val usedWhiteCards: List<Int> = emptyList(),
 
     @Column("used_black_cards")
-    val usedBlackCards: List<Int> = emptyList()
+    val usedBlackCards: List<Int> = emptyList(),
+
+    @Column("joining_players")
+    val joiningPlayers: List<Long> = emptyList(),
+
+    @Column("leaving_players")
+    val leavingPlayers: List<Long> = emptyList()
 )
