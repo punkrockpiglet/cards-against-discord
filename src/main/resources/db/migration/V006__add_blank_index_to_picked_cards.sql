@@ -1,1 +1,0 @@
-alter table picked_cards add column blank_index int not null default 0;

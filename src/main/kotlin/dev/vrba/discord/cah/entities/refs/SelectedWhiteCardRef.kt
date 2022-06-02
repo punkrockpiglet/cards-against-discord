@@ -12,5 +12,8 @@ data class SelectedWhiteCardRef(
     val player: AggregateReference<Player, Int>,
 
     @Column("white_card_id")
-    val whiteCard: AggregateReference<WhiteCard, Int>
+    val whiteCard: AggregateReference<WhiteCard, Int>,
+
+    @Column("blank_position")
+    val position: Int = 0,
 )

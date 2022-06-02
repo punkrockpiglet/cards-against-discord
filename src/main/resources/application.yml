@@ -4,7 +4,13 @@ spring:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/cah}
     username: ${DATABASE_USERNAME:cah}
     password: ${DATABASE_PASSWORD:cah}
+  sql:
+    init:
+      mode: always
 
 discord:
   token: ${DISCORD_TOKEN}
   development-guild-id: ${DISCORD_DEV_GUILD_ID:932728712355512331}
+
+
+

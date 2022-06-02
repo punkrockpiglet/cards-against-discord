@@ -1,1 +1,0 @@
-alter table games add constraint fk_black_card_id foreign key (black_card_id) references black_cards (id);

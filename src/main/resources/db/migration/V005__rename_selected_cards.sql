@@ -1,1 +1,0 @@
-alter table selected_cards rename to picked_cards;
