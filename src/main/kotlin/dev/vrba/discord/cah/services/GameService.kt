@@ -37,6 +37,7 @@ class GameService(
         val players = lobby.players.map { Player(user = it, game = game.id) }
 
         playerRepository.saveAll(players)
+        createNewGameRound(game, message)
 
         return game
     }
@@ -47,6 +48,12 @@ class GameService(
 
     override fun getPickedWhiteCards(game: Int, user: Long): List<WhiteCard> {
         return whiteCardRepository.getPickedWhiteCards(user)
+    }
+
+    private fun createNewGameRound(game: Game, message: Message?) {
+        // Fill in players' hands with missing cards
+        val pool = whiteCardRepository.getUnusedWhiteCards(game.id).shuffled()
+        val players = playerRepository.findAllByGameId(game.id)
     }
 
     private fun findMessage(guild: Long, channel: Long, message: Long): Message? {

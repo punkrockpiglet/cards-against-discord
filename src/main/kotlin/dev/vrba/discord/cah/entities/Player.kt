@@ -1,7 +1,11 @@
 package dev.vrba.discord.cah.entities
 
+import dev.vrba.discord.cah.entities.refs.SelectedWhiteCardRef
+import dev.vrba.discord.cah.entities.refs.WhiteCardRef
 import org.springframework.data.annotation.Id
+import org.springframework.data.annotation.Reference
 import org.springframework.data.relational.core.mapping.Column
+import org.springframework.data.relational.core.mapping.MappedCollection
 import org.springframework.data.relational.core.mapping.Table
 
 @Table("players")
@@ -18,5 +22,11 @@ data class Player(
     @Column("selected_white_card_id")
     val selectedWhiteCard: Int? = null,
 
-    val score: Int = 0
+    val score: Int = 0,
+
+    @MappedCollection(idColumn = "player_id", keyColumn = "player_id")
+    val hand: List<WhiteCardRef> = emptyList(),
+
+    @MappedCollection(idColumn = "player_id", keyColumn = "player_id")
+    val selectedCards: List<SelectedWhiteCardRef> = emptyList()
 )
