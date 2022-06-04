@@ -38,8 +38,8 @@ class CardImportingService(
         whiteCardRepository.deleteAll()
         blackCardRepository.deleteAll()
 
-        whiteCardRepository.saveAll(cards.white.map { WhiteCard(0, it) })
-        blackCardRepository.saveAll(cards.black.map { BlackCard(0, it.pick, it.text) })
+        whiteCardRepository.saveAll(cards.white.map { WhiteCard(0, it.replace("\\n", "\n")) })
+        blackCardRepository.saveAll(cards.black.map { BlackCard(0, it.pick, it.text.replace("\\n", "\n")) })
 
         logger.info("Imported ${cards.white.size} white cards and ${cards.black.size} black cards")
     }

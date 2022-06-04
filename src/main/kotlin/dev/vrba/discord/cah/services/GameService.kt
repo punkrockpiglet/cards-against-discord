@@ -3,11 +3,9 @@ package dev.vrba.discord.cah.services
 import dev.vrba.discord.cah.discord.DiscordEmbeds.gamePlaceholderEmbed
 import dev.vrba.discord.cah.discord.DiscordEmbeds.gameRoundEmbed
 import dev.vrba.discord.cah.discord.asUserMention
-import dev.vrba.discord.cah.entities.Game
-import dev.vrba.discord.cah.entities.Lobby
-import dev.vrba.discord.cah.entities.Player
-import dev.vrba.discord.cah.entities.WhiteCard
+import dev.vrba.discord.cah.entities.*
 import dev.vrba.discord.cah.entities.refs.WhiteCardRef
+import dev.vrba.discord.cah.exceptions.EmbeddableException
 import dev.vrba.discord.cah.repositories.BlackCardRepository
 import dev.vrba.discord.cah.repositories.GameRepository
 import dev.vrba.discord.cah.repositories.PlayerRepository
@@ -51,6 +49,20 @@ class GameService(
         return game
     }
 
+    override fun getGameById(game: Int): Game {
+        return gameRepository.findByIdOrNull(game) ?: throw EmbeddableException(
+            "Game could not be found",
+            "If you think that this is a bug, please open a new issue on GitHub"
+        )
+    }
+
+    override fun getPlayerByUserId(game: Int, user: Long): Player {
+        return playerRepository.findByGameAndUser(game, user) ?: throw EmbeddableException(
+            "Player could not be found",
+            "If you think that this is a bug, please open a new issue on GitHub"
+        )
+    }
+
     override fun getPlayerWhiteCards(game: Int, user: Long): List<WhiteCard> {
         return whiteCardRepository.getAvailableWhiteCards(user)
     }
@@ -91,11 +103,11 @@ class GameService(
 
         // Choose a new card czar for the round as the player that's next after the judge from the previous round
         // If there is no judge set from the previous round, choose a random player
-        val previousJudge = players.firstOrNull { it.id == game.judge } ?: players.random()
+        val previousJudge = players.firstOrNull { it.user == game.judge } ?: players.random()
         val judge = players[(players.indexOf(previousJudge) + 1) % players.size]
         val updated = gameRepository.save(
             game.copy(
-                judge = judge.id,
+                judge = judge.user,
                 message = message?.idLong,
                 blackCard = blackCard.id,
                 usedBlackCards = game.usedBlackCards + listOfNotNull(game.blackCard),
@@ -105,14 +117,18 @@ class GameService(
         updateGameEmbed(updated)
     }
 
+    override fun getCurrentBlackCard(id: Int): BlackCard {
+        return blackCardRepository.findCurrentBlackCard(id)
+    }
+
     private fun updateGameEmbed(game: Game) {
         val message = findMessage(game.guild, game.channel, game.message ?: 0) ?: throw IllegalStateException("Cannot find the game message!")
         val blackCard = blackCardRepository.findByIdOrNull(game.blackCard ?: 0) ?: throw IllegalStateException("Cannot find the currently configured black card.")
         val allPlayers = playerRepository.findAllByGameId(game.id)
 
-        val judge = allPlayers.first { it.id == game.judge }.user.asUserMention()
+        val judge = allPlayers.first { it.user == game.judge }.user.asUserMention()
         val players = allPlayers
-            .filter { it.id != game.judge }
+            .filter { it.user != game.judge }
             .map {
                 val emoji = if (it.selectedCards.size <= blackCard.blanks) "⏳" else "✅"
                 val mention = it.user.asUserMention()

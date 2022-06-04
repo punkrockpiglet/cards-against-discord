@@ -2,6 +2,7 @@ package dev.vrba.discord.cah.discord
 
 import dev.vrba.discord.cah.entities.BlackCard
 import dev.vrba.discord.cah.entities.Lobby
+import dev.vrba.discord.cah.entities.WhiteCard
 import dev.vrba.discord.cah.exceptions.EmbeddableException
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
@@ -75,6 +76,18 @@ object DiscordEmbeds {
             .setDescription("To pick your white card${if (blackCard.blanks > 1) "s" else ""} press the button below this message")
             .addField("The judge", "⚖️ $judge", false)
             .addField("Players", players.joinToString("\n"), false)
+            .build()
+    }
+
+    fun whiteCardSelectionEmbed(blackCard: BlackCard, availableWhiteCards: List<WhiteCard>, pickedWhiteCards: List<WhiteCard>): MessageEmbed {
+        val text = blackCard.formatText(pickedWhiteCards.map { it.text })
+        val cards = availableWhiteCards.joinToString("\n") { it.text }
+
+        return EmbedBuilder()
+            .setColor(DiscordColors.fuchsia)
+            .setTitle("Pick a white card to fill in the blanks")
+            .setDescription(text)
+            .addField("Available cards", cards, false)
             .build()
     }
 }

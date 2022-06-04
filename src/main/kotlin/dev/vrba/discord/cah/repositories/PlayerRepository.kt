@@ -13,6 +13,9 @@ interface PlayerRepository : CrudRepository<Player, Int> {
     @Query("select * from players where players.game_id = :game_id")
     fun findAllByGameId(@Param("game_id") gameId: Int): List<Player>
 
+    @Query("select * from players where players.game_id = :game_id and players.user_id = :user_id")
+    fun findByGameAndUser(@Param("game_id") game: Int, @Param("user_id") user: Long): Player?
+
     @Modifying
     @Query("""
         delete from players 

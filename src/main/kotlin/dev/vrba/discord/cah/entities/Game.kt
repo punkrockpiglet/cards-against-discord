@@ -25,7 +25,7 @@ data class Game(
     val blackCard: Int? = null,
 
     @Column("judge_id")
-    val judge: Int? = null,
+    val judge: Long? = null,
 
     @Column("used_white_cards")
     val usedWhiteCards: List<Int> = emptyList(),

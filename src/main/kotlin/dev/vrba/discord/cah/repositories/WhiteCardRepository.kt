@@ -39,7 +39,7 @@ interface WhiteCardRepository : CrudRepository<WhiteCard, Int> {
                 left join picked_cards on white_cards.id = picked_cards.white_card_id
                 left join players on picked_cards.player_id = players.id
             where players.user_id = :user_id
-            order by picked_cards.blank_index
+            order by picked_cards.blank_position
         """
     )
     fun getPickedWhiteCards(@Param("user_id") user: Long): List<WhiteCard>

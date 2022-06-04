@@ -21,4 +21,14 @@ interface BlackCardRepository : CrudRepository<BlackCard, Int> {
     )
     fun getUnusedBlackCards(@Param("game_id") gameId: Int): List<BlackCard>
 
+    @Query(
+        """
+        select black_cards.* from black_cards
+        where black_cards.id = (
+            select games.black_card_id from games
+            where games.id = :game_id
+        )
+        """
+    )
+    fun findCurrentBlackCard(@Param("game_id") gameId: Int): BlackCard
 }
