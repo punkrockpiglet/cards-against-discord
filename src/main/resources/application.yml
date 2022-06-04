@@ -11,6 +11,3 @@ spring:
 discord:
   token: ${DISCORD_TOKEN}
   development-guild-id: ${DISCORD_DEV_GUILD_ID:932728712355512331}
-
-
-

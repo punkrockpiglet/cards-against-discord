@@ -1,5 +1,6 @@
 package dev.vrba.discord.cah.discord
 
+import dev.vrba.discord.cah.entities.BlackCard
 import dev.vrba.discord.cah.entities.Lobby
 import dev.vrba.discord.cah.exceptions.EmbeddableException
 import net.dv8tion.jda.api.EmbedBuilder
@@ -64,6 +65,16 @@ object DiscordEmbeds {
             .setColor(DiscordColors.primary)
             .setTitle("Starting a new game...")
             .setDescription("This shouldn't take long")
+            .build()
+    }
+
+    fun gameRoundEmbed(blackCard: BlackCard, judge: String, players: List<String>): MessageEmbed {
+        return EmbedBuilder()
+            .setColor(DiscordColors.primary)
+            .setTitle(blackCard.formatText())
+            .setDescription("To pick your white card${if (blackCard.blanks > 1) "s" else ""} press the button below this message")
+            .addField("The judge", "⚖️ $judge", false)
+            .addField("Players", players.joinToString("\n"), false)
             .build()
     }
 }
